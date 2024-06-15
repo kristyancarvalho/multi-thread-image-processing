@@ -10,10 +10,10 @@ Este projeto demonstra o processamento de imagens utilizando o Node.js, comparan
 npm install
 ```
 
-2. Crie as pastas para as imagens processadas:
+2. Crie as pastas para as imagens:
 
 ```sh
-mkdir images_processed images_processed_worker_threads
+mkdir images images_processed images_processed_worker_threads
 ```
 
 ## Como Rodar
