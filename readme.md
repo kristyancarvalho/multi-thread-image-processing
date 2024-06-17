@@ -26,6 +26,14 @@ mkdir images_processed images_processed_worker_threads
 node src/main.js
 ```
 
+## Features
+
+1. Limpar pastas de imagens processadas
+
+```sh
+node clean.js
+```
+
 ## Logs
 
 Os logs são gerados tanto no console quanto no arquivo `logs/app.log`. Eles incluem informações sobre o tempo de processamento e possíveis erros.

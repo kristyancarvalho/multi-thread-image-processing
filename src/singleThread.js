@@ -1,5 +1,6 @@
 const path = require("path");
 const sharp = require("sharp");
+const fs = require("fs").promises;
 const winston = require("winston");
 
 const logger = winston.createLogger({
@@ -16,15 +17,20 @@ const logger = winston.createLogger({
 
 async function processImage(filePath) {
   try {
-    const outputFilePath = filePath.replace("images", "images_processed");
-    await sharp(filePath).greyscale().toFile(outputFilePath);
-    logger.info(`Processada (single thread): `.blue + path.basename(filePath));
+    const data = await fs.readFile(filePath);
+    const outputDir = path.join(__dirname, "..", "images_processed");
+    const outputFilePath = path.join(outputDir, path.basename(filePath));
+    await fs.mkdir(outputDir, { recursive: true });
+    await sharp(data).resize(800).greyscale().toFile(outputFilePath);
   } catch (error) {
-    logger.error(`Erro ao processar imagem ${filePath}: `.red + error.message);
+    console.error(`Erro ao processar imagem ${filePath}: ${error.message}`);
   }
 }
 
 async function processImagesSingleThread(imageFiles, imagesDir) {
+  logger.info(
+    `Utilizando 1 núcleo para o processamento Single Thread`.bold.yellow
+  );
   for (const file of imageFiles) {
     const filePath = path.join(imagesDir, file);
     await processImage(filePath);

@@ -1,8 +1,7 @@
 const path = require("path");
-const sharp = require("sharp");
-const workerpool = require("workerpool");
-const winston = require("winston");
 const os = require("os");
+const { Worker } = require("worker_threads");
+const winston = require("winston");
 
 const numCPUs = os.cpus().length;
 
@@ -18,52 +17,36 @@ const logger = winston.createLogger({
   ],
 });
 
-async function processImage(filePath) {
-  try {
-    const outputFilePath = filePath.replace("images", "images_processed");
-    await sharp(filePath).greyscale().toFile(outputFilePath);
-    logger.info(`Processada (single thread): `.blue + path.basename(filePath));
-  } catch (error) {
-    logger.error(`Erro ao processar imagem ${filePath}: `.red + error.message);
-  }
-}
-
-async function processImagesSingleThread(imageFiles, imagesDir) {
-  for (const file of imageFiles) {
-    const filePath = path.join(imagesDir, file);
-    await processImage(filePath);
-  }
-}
-
 async function processImagesWithWorkers(imageFiles, imagesDir) {
-  const pool = workerpool.pool(path.join(__dirname, "worker.js"), {
-    minWorkers: "max",
-  });
-
   logger.info(
-    `Utilizando ${numCPUs} núcleos para o processamento com Worker Threads`.bold
+    `Utilizando ${numCPUs} núcleos para o processamento Multi Thread`.bold
       .yellow
   );
 
-  const promises = imageFiles.map((file) => {
-    const filePath = path.join(imagesDir, file);
-    return pool
-      .exec("processImage", [{ filePath }])
-      .then(() => {
-        logger.info(`Processada (worker thread): `.cyan + file);
-      })
-      .catch((err) => {
-        logger.error(
-          `Erro ao processar imagem ${filePath}: `.red + err.message
-        );
-      });
-  });
+  const queue = imageFiles.map((file) => path.join(imagesDir, file));
+  const promises = [];
+
+  function createWorker() {
+    const worker = new Worker(path.join(__dirname, "worker.js"));
+    worker.on("message", () => {
+      const filePath = queue.pop();
+      if (filePath) {
+        worker.postMessage({ filePath });
+      } else {
+        worker.terminate();
+      }
+    });
+    worker.postMessage({ filePath: queue.pop() });
+    return worker;
+  }
+
+  for (let i = 0; i < numCPUs; i++) {
+    promises.push(createWorker());
+  }
 
   await Promise.all(promises);
-  await pool.terminate();
 }
 
 module.exports = {
-  processImagesSingleThread,
   processImagesWithWorkers,
 };

@@ -1,4 +1,5 @@
 node_modules
 logs
+images
 images_processed
 images_processed_worker_threads

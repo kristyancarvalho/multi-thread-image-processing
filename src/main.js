@@ -1,9 +1,7 @@
 const { readdir } = require("fs").promises;
 const path = require("path");
-const {
-  processImagesWithWorkers,
-  processImagesSingleThread,
-} = require("./utils");
+const { processImagesWithWorkers } = require("./utils");
+const { processImagesSingleThread } = require("./singleThread");
 const colors = require("colors");
 const winston = require("winston");
 
@@ -27,8 +25,9 @@ async function main() {
     const imageFiles = files.filter((file) =>
       /\.(jpg|jpeg|png|webp)$/i.test(file)
     );
+    const totalImages = imageFiles.length;
 
-    logger.info("Iniciando processamento de imagens".bold.green);
+    logger.info(`Iniciando processamento de ${totalImages} imagens`.bold.green);
 
     console.time("Single Thread");
     await processImagesSingleThread(imageFiles, imagesDir);
@@ -38,7 +37,7 @@ async function main() {
     await processImagesWithWorkers(imageFiles, imagesDir);
     console.timeEnd("Worker Threads");
 
-    logger.info("Processamento de imagens concluído".bold.green);
+    logger.info(`Benchmark concluído.`.bold.green);
   } catch (error) {
     logger.error(
       "Erro durante o processamento de imagens: ".red + error.message
