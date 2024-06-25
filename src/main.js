@@ -1,9 +1,10 @@
-const { readdir } = require("fs").promises;
-const path = require("path");
-const { processImagesWithWorkers } = require("./utils");
-const { processImagesSingleThread } = require("./singleThread");
-const colors = require("colors");
-const winston = require("winston");
+import { readdir } from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+import { processImagesWithWorkers } from "./utils.js";
+import { processImagesSingleThread } from "./singleThread.js";
+import colors from "colors";
+import winston from "winston";
 
 const logger = winston.createLogger({
   level: "info",
@@ -17,6 +18,8 @@ const logger = winston.createLogger({
   ],
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const imagesDir = path.join(__dirname, "..", "images");
 
 async function main() {

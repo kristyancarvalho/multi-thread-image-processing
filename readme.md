@@ -23,6 +23,12 @@ mkdir images images_processed images_processed_worker_threads
 2. Execute o script principal:
 
 ```sh
+npm run bench
+```
+
+### or
+
+```sh
 node src/main.js
 ```
 
@@ -31,7 +37,7 @@ node src/main.js
 1. Limpar pastas de imagens processadas
 
 ```sh
-node clean.js
+npm run clean
 ```
 
 ## Logs

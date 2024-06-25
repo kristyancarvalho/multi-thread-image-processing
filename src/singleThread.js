@@ -1,7 +1,8 @@
-const path = require("path");
-const sharp = require("sharp");
-const fs = require("fs").promises;
-const winston = require("winston");
+import path from "path";
+import { fileURLToPath } from "url";
+import sharp from "sharp";
+import fs from "fs/promises";
+import winston from "winston";
 
 const logger = winston.createLogger({
   level: "info",
@@ -15,6 +16,9 @@ const logger = winston.createLogger({
   ],
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 async function processImage(filePath) {
   try {
     const data = await fs.readFile(filePath);
@@ -27,7 +31,7 @@ async function processImage(filePath) {
   }
 }
 
-async function processImagesSingleThread(imageFiles, imagesDir) {
+export async function processImagesSingleThread(imageFiles, imagesDir) {
   logger.info(
     `Utilizando 1 núcleo para o processamento Single Thread`.bold.yellow
   );
@@ -36,7 +40,3 @@ async function processImagesSingleThread(imageFiles, imagesDir) {
     await processImage(filePath);
   }
 }
-
-module.exports = {
-  processImagesSingleThread,
-};

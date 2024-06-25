@@ -2,9 +2,11 @@
   "name": "teste-image-processing",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bench": "node src/main.js",
+    "clean": "node src/features/clean.js"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +14,6 @@
   "dependencies": {
     "benchmark": "^2.1.4",
     "colors": "^1.4.0",
-    "performance-now": "^2.1.0",
     "sharp": "^0.33.4",
     "winston": "^3.13.0",
     "worker-threads": "^1.0.0",

@@ -1,7 +1,8 @@
-const fs = require("fs").promises;
-const path = require("path");
-const winston = require("winston");
-const colors = require("colors");
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+import winston from "winston";
+import colors from "colors";
 
 const logger = winston.createLogger({
   level: "info",
@@ -15,9 +16,12 @@ const logger = winston.createLogger({
   ],
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const directories = [
-  path.join(__dirname, "images_processed"),
-  path.join(__dirname, "images_processed_worker_threads"),
+  path.join(__dirname, "..", "..", "images_processed"),
+  path.join(__dirname, "..", "..", "images_processed_worker_threads"),
 ];
 
 async function cleanDirectory(directory) {

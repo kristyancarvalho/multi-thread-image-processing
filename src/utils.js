@@ -1,7 +1,8 @@
-const path = require("path");
-const os = require("os");
-const { Worker } = require("worker_threads");
-const winston = require("winston");
+import path from "path";
+import { fileURLToPath } from "url";
+import os from "os";
+import { Worker } from "worker_threads";
+import winston from "winston";
 
 const numCPUs = os.cpus().length;
 
@@ -17,7 +18,10 @@ const logger = winston.createLogger({
   ],
 });
 
-async function processImagesWithWorkers(imageFiles, imagesDir) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export async function processImagesWithWorkers(imageFiles, imagesDir) {
   logger.info(
     `Utilizando ${numCPUs} núcleos para o processamento Multi Thread`.bold
       .yellow
@@ -27,7 +31,7 @@ async function processImagesWithWorkers(imageFiles, imagesDir) {
   const promises = [];
 
   function createWorker() {
-    const worker = new Worker(path.join(__dirname, "worker.js"));
+    const worker = new Worker(new URL("worker.js", import.meta.url));
     worker.on("message", () => {
       const filePath = queue.pop();
       if (filePath) {
@@ -46,7 +50,3 @@ async function processImagesWithWorkers(imageFiles, imagesDir) {
 
   await Promise.all(promises);
 }
-
-module.exports = {
-  processImagesWithWorkers,
-};

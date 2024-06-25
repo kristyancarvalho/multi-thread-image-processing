@@ -1,7 +1,11 @@
-const { parentPort } = require("worker_threads");
-const sharp = require("sharp");
-const path = require("path");
-const fs = require("fs").promises;
+import { parentPort } from "worker_threads";
+import { fileURLToPath } from "url";
+import path from "path";
+import sharp from "sharp";
+import fs from "fs/promises";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 parentPort.on("message", async ({ filePath }) => {
   try {
