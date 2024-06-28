@@ -1,4 +1,4 @@
-# Processamento de Imagens com Node.js
+# Benchmark: Processamento de imagens em pararelo com Node Worker Threads x Single-Thread
 
 Este projeto demonstra o processamento de imagens utilizando o Node.js, comparando a performance entre processamento em single thread e com Worker Threads. As imagens de entrada são convertidas para escala de cinza e redimensionadas para uma largura de 800 pixels.
 
@@ -13,28 +13,30 @@ npm install
 2. Crie as pastas para as imagens:
 
 ```sh
-mkdir images images_processed images_processed_worker_threads
+mkdir images images_processed_single_thread images_processed_worker_threads logs
 ```
 
 ## Como Rodar
 
 1. Adicione suas imagens na pasta `images`.
 
-2. Execute o script principal:
+2. Execute o servidor principal:
 
 ```sh
-npm run bench
+npm start
 ```
 
-### or
+3. Inicie os testes de processamento:
+
+use `curl` para iniciar os testes. Exemplo, para processar 100 imagens, execute:
 
 ```sh
-node src/main.js
+curl http://localhost:3000/test/100
 ```
 
 ## Features
 
-1. Limpar pastas de imagens processadas
+1. Limpar pastas de imagens processadas:
 
 ```sh
 npm run clean

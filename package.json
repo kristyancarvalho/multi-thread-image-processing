@@ -5,15 +5,17 @@
   "main": "src/main.js",
   "type": "module",
   "scripts": {
-    "bench": "node src/main.js",
+    "start": "node src/main.js",
     "clean": "node src/features/clean.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "benchmark": "^2.1.4",
+    "cli-table3": "^0.6.5",
     "colors": "^1.4.0",
+    "express": "^4.19.2",
+    "p-queue": "^8.0.1",
     "sharp": "^0.33.4",
     "winston": "^3.13.0",
     "worker-threads": "^1.0.0",

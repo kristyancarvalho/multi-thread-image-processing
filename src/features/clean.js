@@ -20,7 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const directories = [
-  path.join(__dirname, "..", "..", "images_processed"),
+  path.join(__dirname, "..", "..", "images_processed_single_thread"),
   path.join(__dirname, "..", "..", "images_processed_worker_threads"),
 ];
 
