@@ -2,6 +2,7 @@ import { Worker } from "worker_threads";
 import PQueue from "p-queue";
 import path from "path";
 import { fileURLToPath } from "url";
+import os from "os";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,7 +12,8 @@ export async function processImagesWithWorkers(
   imagesDir,
   outputDir
 ) {
-  const queue = new PQueue({ concurrency: 2 });
+  const numCPUs = os.cpus().length;
+  const queue = new PQueue({ concurrency: numCPUs }); // Ajuste a concorrência conforme o número de CPUs
 
   const createWorker = () => {
     const worker = new Worker(path.join(__dirname, "worker.js"), {
@@ -28,14 +30,14 @@ export async function processImagesWithWorkers(
       console.error(`Worker error: ${error}`);
     });
 
-    worker.on("exit", (code) => {
+    worker.on("exit", () => {
       workers.push(createWorker());
     });
 
     return worker;
   };
 
-  const workers = Array.from({ length: 2 }, createWorker);
+  const workers = Array.from({ length: numCPUs }, createWorker);
 
   const results = imageFiles.map((file) => {
     const filePath = path.join(imagesDir, file);
