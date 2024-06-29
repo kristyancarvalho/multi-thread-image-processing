@@ -14,5 +14,6 @@ parentPort.on("message", async (filePath) => {
     parentPort.postMessage({ filePath, success: true });
   } catch (error) {
     parentPort.postMessage({ filePath, success: false, error: error.message });
+    console.error(`Error processing ${filePath}: ${error.message}`);
   }
 });

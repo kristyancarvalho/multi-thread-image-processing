@@ -29,12 +29,7 @@ export async function processImagesWithWorkers(
     });
 
     worker.on("exit", (code) => {
-      if (code !== 0) {
-        console.error(
-          `Worker stopped with exit code ${code}. Restarting worker...`
-        );
-        workers.push(createWorker());
-      }
+      workers.push(createWorker());
     });
 
     return worker;
